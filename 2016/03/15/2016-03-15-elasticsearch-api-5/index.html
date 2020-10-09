@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>ElasticSearch API 5-结构化搜索 · lejingw's blog</title><meta name="description" content="结构化搜索构建测试数据1 创建索引
+curl -XDELETE -i &amp;#39;http://localhost:9200/my_store&amp;#39;
+curl -XPUT -i &amp;quot;http://127.0.0.1:9200/my_store&amp;quot; -d &amp;#39;
+&amp;#123;
+ "><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>ElasticSearch API 5-结构化搜索</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2016-03-15</span><span class="meta-item"><i class="fa fa-folder"></i><span>&nbsp;</span><a href="/categories/technology/" title="technology" class="a-tag">technology</a><span>&nbsp;</span></span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/elasticsearch/" title="elasticsearch" class="a-tag">elasticsearch</a><span>&nbsp;</span></span></p><p class="post-abstract"><h1 id="结构化搜索"><a href="#结构化搜索" class="headerlink" title="结构化搜索"></a>结构化搜索</h1><h2 id="构建测试数据"><a href="#构建测试数据" class="headerlink" title="构建测试数据"></a>构建测试数据</h2><pre><code>1 创建索引
+curl -XDELETE -i &#39;http://localhost:9200/my_store&#39;
+curl -XPUT -i &quot;http://127.0.0.1:9200/my_store&quot; -d &#39;
+&#123;
+   &quot;mappings&quot;:&#123;
+     &quot;products&quot;:&#123;
+        &quot;properties&quot;:&#123;
+          &quot;productID&quot;:&#123;
+            &quot;type&quot;:&quot;string&quot;,
+            &quot;index&quot;:&quot;not_analyzed&quot;
+           &#125;
+        &#125;
+      &#125;
+    &#125;
+&#125;&#39;
+
+2 批量添加数据
+curl -XPOST -i &#39;http://localhost:9200/my_store/products/_bulk&#39; -d &#39;
+&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;
+&#123; &quot;price&quot; : 10, &quot;productID&quot; : &quot;XHDK-A-1293-#fJ3&quot; &#125;
+&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;
+&#123; &quot;price&quot; : 20, &quot;productID&quot; : &quot;KDKE-B-9947-#kL5&quot; &#125;
+&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;
+&#123; &quot;price&quot; : 30, &quot;productID&quot; : &quot;JODL-X-1937-#pV7&quot; &#125;
+&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4 &#125;&#125;
+&#123; &quot;price&quot; : 30, &quot;productID&quot; : &quot;QQPX-R-3956-#aD8&quot; &#125;
+&#39;
+
+3 准确值查询
+curl -XGET -i &#39;http://localhost:9200/my_store/products/_search&#39; -d &#39;&#123;
+    &quot;query&quot;:&#123;
+        &quot;filtered&quot;:&#123;
+            &quot;filter&quot;:&#123;
+                &quot;term&quot;:&#123;
+                    &quot;productID&quot;:&quot;KDKE-B-9947-#kL5&quot;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<h2 id="组合过滤"><a href="#组合过滤" class="headerlink" title="组合过滤"></a>组合过滤</h2><pre><code>curl -XGET -i &#39;http://localhost:9200/my_store/products/_search&#39; -d &#39;&#123;
+&quot;query&quot; : &#123;
+        &quot;filtered&quot; : &#123;
+            &quot;filter&quot; : &#123;
+                &quot;bool&quot;:&#123;
+                    &quot;should&quot;:[
+                        &#123;&quot;term&quot;:&#123;&quot;price&quot;:20&#125;&#125;,
+                        &#123;&quot;term&quot;:&#123;&quot;procudtID&quot;:&quot;XHDK-A-1293-#fJ3&quot;&#125;&#125;
+                    ],
+                    &quot;must_not&quot;:&#123;
+                        &quot;term&quot;:&#123;&quot;price&quot;:30&#125;
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<blockquote>
+<p>SELECT product FROM   products<br>WHERE  (price = 20 OR productID = “XHDK-A-1293-#fJ3”)<br>  AND  (price != 30)</p>
+</blockquote>
+<h2 id="查询多个准确值"><a href="#查询多个准确值" class="headerlink" title="查询多个准确值"></a>查询多个准确值</h2><pre><code>&#123;
+    &quot;terms&quot;:&#123;
+        &quot;price&quot;:[20,30]
+    &#125;
+&#125;</code></pre>
+<blockquote>
+<p>term 和 terms 是包含操作，而不是相等操作</p>
+</blockquote>
+<h2 id="完全匹配"><a href="#完全匹配" class="headerlink" title="完全匹配"></a>完全匹配</h2><p>假如你真的需要完全匹配这种行为，最好是通过添加另一个字段来实现。在这个字段中，你索引原字段包含值的个数。</p>
+<pre><code>&#123; &quot;tags&quot; : [&quot;search&quot;], &quot;tag_count&quot; : 1 &#125;
+&#123; &quot;tags&quot; : [&quot;search&quot;, &quot;open_source&quot;], &quot;tag_count&quot; : 2 &#125;
+
+GET /my_index/my_type/_search
+&#123;
+    &quot;query&quot;: &#123;
+        &quot;filtered&quot; : &#123;
+            &quot;filter&quot; : &#123;
+                 &quot;bool&quot; : &#123;
+                    &quot;must&quot; : [
+                        &#123; &quot;term&quot; : &#123; &quot;tags&quot; : &quot;search&quot; &#125; &#125;,
+                        &#123; &quot;term&quot; : &#123; &quot;tag_count&quot; : 1 &#125; &#125;
+                    ]
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+<h2 id="范围"><a href="#范围" class="headerlink" title="范围"></a>范围</h2><pre><code>GET /my_store/products/_search
+&#123;
+    &quot;query&quot; : &#123;
+        &quot;filtered&quot; : &#123;
+            &quot;filter&quot; : &#123;
+                &quot;range&quot; : &#123;
+                    &quot;price&quot; : &#123;
+                        &quot;gte&quot; : 20,
+                        &quot;lt&quot;  : 40
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="日期范围"><a href="#日期范围" class="headerlink" title="日期范围"></a>日期范围</h3><pre><code>&quot;range&quot; : &#123;
+    &quot;timestamp&quot; : &#123;
+        &quot;gt&quot; : &quot;2014-01-01 00:00:00&quot;,
+        &quot;lt&quot; : &quot;2014-01-07 00:00:00&quot;
+    &#125;
+&#125;
+
+&quot;range&quot;:&#123;
+    &quot;timestamp&quot;:&#123;
+        &quot;gt&quot;:&quot;now-1h&quot;#最近一小时
+    &#125;
+&#125;
+
+&quot;range&quot; : &#123;
+    &quot;timestamp&quot; : &#123;
+        &quot;gt&quot; : &quot;2014-01-01 00:00:00&quot;,
+        &quot;lt&quot; : &quot;2014-01-01 00:00:00||+1M&quot;#早于2014年1月1号加一个月
+    &#125;
+&#125;</code></pre>
+<blockquote>
+<p>只要在日期后加上双竖线||，就能使用日期数学表达式了</p>
+</blockquote>
+<h2 id="处理null值"><a href="#处理null值" class="headerlink" title="处理null值"></a>处理null值</h2><pre><code>GET /my_index/posts/_search
+&#123;
+    &quot;query&quot; : &#123;
+        &quot;filtered&quot; : &#123;
+            &quot;filter&quot; : &#123;
+                &quot;exists&quot; : &#123; &quot;field&quot; : &quot;tags&quot; &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+
+GET /my_index/posts/_search
+&#123;
+    &quot;query&quot; : &#123;
+        &quot;filtered&quot; : &#123;
+            &quot;filter&quot;: &#123;
+                &quot;missing&quot; : &#123; &quot;field&quot; : &quot;tags&quot; &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+<h3 id="对象的exists-missing"><a href="#对象的exists-missing" class="headerlink" title="对象的exists/missing"></a>对象的exists/missing</h3><pre class="line-numbers language-bash"><code class="language-bash"><span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
+   <span class="token string">"name"</span> <span class="token keyword">:</span> <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
+      <span class="token string">"first"</span> <span class="token keyword">:</span> <span class="token string">"John"</span>,
+      <span class="token string">"last"</span> <span class="token keyword">:</span>  <span class="token string">"Smith"</span>
+   <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
+<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
+<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
+   <span class="token string">"name.first"</span> <span class="token keyword">:</span> <span class="token string">"John"</span>,
+   <span class="token string">"name.last"</span>  <span class="token keyword">:</span> <span class="token string">"Smith"</span>
+<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
+
+<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
+    <span class="token string">"exists"</span> <span class="token keyword">:</span> <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123; "field" : "name" &amp;#125;</span>
+<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
+<span class="token operator">==</span><span class="token operator">=</span><span class="token operator">></span>
+<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
+    <span class="token string">"bool"</span><span class="token keyword">:</span> <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
+        <span class="token string">"should"</span><span class="token keyword">:</span> <span class="token punctuation">[</span>
+            <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123; "exists": &amp;#123; "field": &amp;#123; "name.first" &amp;#125;&amp;#125;&amp;#125;,</span>
+            <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123; "exists": &amp;#123; "field": &amp;#123; "name.last"  &amp;#125;&amp;#125;&amp;#125;</span>
+        <span class="token punctuation">]</span>
+    <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
+<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="过滤顺序"><a href="#过滤顺序" class="headerlink" title="过滤顺序"></a>过滤顺序</h2><p>bool 条件中过滤器的顺序对性能有很大的影响</p>
+<ul>
+<li>更详细的过滤条件应该被放置在其他过滤器之前，以便在更早的排除更多的文档</li>
+<li>缓存的过滤器非常快，所以它们需要被放在不能缓存的过滤器之前</li>
+</ul>
+</p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-5/%20lejingw's blog%20ElasticSearch API 5-结构化搜索" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2016/03/15/2016-03-15-use-jmeter-1/" title="Use Jmeter#1"><i class="fa fa-angle-double-left"></i>&nbsp;이전 포스트: Use Jmeter#1</a></span><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2016/03/15/2016-03-15-elasticsearch-api-4/" title="ElasticSearch API 4-索引管理">다음 포스트: ElasticSearch API 4-索引管理&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>

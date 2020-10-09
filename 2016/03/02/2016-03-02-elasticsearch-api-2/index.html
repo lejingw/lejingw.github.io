@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>ElasticSearch API 2-搜索、映射和分析 · lejingw's blog</title><meta name="description" content="空搜索template:
+curl -XGET -i &amp;#39;http://locahost:9200/_search?timeout=5s -d &amp;#39;&amp;#123;&amp;#125;&amp;#39;
+GET /_search?timeout=500ms
+GET /_all/tweet/_search 查"><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>ElasticSearch API 2-搜索、映射和分析</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2016-03-02</span><span class="meta-item"><i class="fa fa-folder"></i><span>&nbsp;</span><a href="/categories/technology/" title="technology" class="a-tag">technology</a><span>&nbsp;</span></span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/elasticsearch/" title="elasticsearch" class="a-tag">elasticsearch</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="空搜索"><a href="#空搜索" class="headerlink" title="空搜索"></a>空搜索</h2><p>template:</p>
+<p><code>curl -XGET -i &#39;http://locahost:9200/_search?timeout=5s -d &#39;&#123;&#125;&#39;</code></p>
+<p><code>GET /_search?timeout=500ms</code></p>
+<p><code>GET /_all/tweet/_search</code> 查询所有类型为tweet的文档</p>
+<p><code>GET /gb,us/user,tweet/_search</code></p>
+<p><code>GET /g*,u*/_search</code></p>
+<h2 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h2><p>size默认为10，from默认从0开始</p>
+<p><code>GET /_search?size=5&amp;from=10</code></p>
+<h2 id="查询字符串"><a href="#查询字符串" class="headerlink" title="查询字符串"></a>查询字符串</h2><p><code>+name:(mary john) +date:&gt;2014-09-10 +(aggregations geo)</code></p>
+<p>url编码</p>
+<p><code>?q=%2Bname%3A(mary+john)+%2Bdate%3A%3E2014-09-10+%2B(aggregations+geo)</code></p>
+<h2 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h2><p><code>curl -XGET -i &#39;http://localhost:9200/website/_mapping/blog?pretty&#39;</code></p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="确切值exact-value和全文full-text"><a href="#确切值exact-value和全文full-text" class="headerlink" title="确切值exact value和全文full text"></a>确切值exact value和全文full text</h3><h3 id="分析器analyzer"><a href="#分析器analyzer" class="headerlink" title="分析器analyzer"></a>分析器analyzer</h3><p>分析</p>
+<ul>
+<li>首先，标记化一个文本块为适用于倒排索引单独的词(term)</li>
+<li>然后标准化这些词为标准形式，提高它们的“可搜索性”或“查全率”</li>
+</ul>
+<p>分析器分析过程</p>
+<ul>
+<li>字符过滤器 character filter</li>
+<li>分词器 tokenizer</li>
+<li>标记过滤 token filters</li>
+</ul>
+<p>内置分析器</p>
+<ul>
+<li>标准分析器 standard</li>
+<li>简单分析器 simple</li>
+<li>空格分析器 whitespace</li>
+<li>英文分析器 english</li>
+</ul>
+<h3 id="测试分析器"><a href="#测试分析器" class="headerlink" title="测试分析器"></a>测试分析器</h3><p><code>curl -XGET -i &#39;http://localhost:9200/_analyze?analyzer=standard&amp;text=Text%2Dto%2danalyze&amp;pretty&#39;</code></p>
+<h2 id="映射-1"><a href="#映射-1" class="headerlink" title="映射"></a>映射</h2><h3 id="index"><a href="#index" class="headerlink" title="index"></a>index</h3><table>
+<thead>
+<tr>
+<th>值</th>
+<th></th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>analyzed</td>
+<td>全文文本</td>
+<td>首先分析这个字符串，然后索引。换言之，以全文形式索引此字段。</td>
+</tr>
+<tr>
+<td>not_analyzed</td>
+<td>确切值</td>
+<td>索引这个字段，使之可以被搜索，但是索引内容和指定值一样。不分析此字段。</td>
+</tr>
+<tr>
+<td>no</td>
+<td></td>
+<td>不索引这个字段。这个字段不能为搜索到。</td>
+</tr>
+</tbody></table>
+<pre><code>&#123;
+    &quot;tag&quot;: &#123;
+        &quot;type&quot;:     &quot;string&quot;,
+        &quot;index&quot;:    &quot;not_analyzed&quot;
+    &#125;
+&#125;</code></pre>
+<blockquote>
+<p>其他简单类型（long、double、date等等）也接受index参数，但相应的值只能是no和not_analyzed，它们的值不能被分析。</p>
+</blockquote>
+<h2 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h2><pre><code>&#123;
+    &quot;tweet&quot;: &#123;
+        &quot;type&quot;:     &quot;string&quot;,
+        &quot;analyzer&quot;: &quot;english&quot;
+    &#125;
+&#125;</code></pre>
+<h2 id="更新映射"><a href="#更新映射" class="headerlink" title="更新映射"></a>更新映射</h2><pre><code>curl -XPUT -i &#39;http://localhost:9200/gb&#39; -d &#39;&#123;
+    &quot;mappings&quot;: &#123;
+        &quot;tweet&quot; : &#123;
+            &quot;properties&quot; : &#123;
+                &quot;tweet&quot; : &#123;
+                    &quot;type&quot; :    &quot;string&quot;,
+                    &quot;analyzer&quot;: &quot;english&quot;
+                &#125;,
+                &quot;date&quot; : &#123;
+                    &quot;type&quot; :   &quot;date&quot;
+                &#125;,
+                &quot;name&quot; : &#123;
+                    &quot;type&quot; :   &quot;string&quot;
+                &#125;,
+                &quot;user_id&quot; : &#123;
+                    &quot;type&quot; :   &quot;long&quot;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<blockquote>
+<p>你可以向已有映射中增加字段，但你 <strong>不能修改</strong> 它。如果一个字段在映射中已经存在，这可能意味着那个字段的数据已经被索引。如果你改变了字段映射，那已经被索引的数据将错误并且不能被正确的搜索到。</p>
+</blockquote>
+<p>新的not_analyzed类型的文本字段</p>
+<pre><code>curl -XPUT -i &#39;http://localhost:9200/gb/_mapping/tweet&#39; -d &#39;&#123;
+    &quot;properties&quot;:&#123;
+        &quot;tag&quot;:&#123;
+            &quot;type&quot;:&quot;string&quot;,
+            &quot;index&quot;:&quot;not_analyzed&quot;
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<h2 id="测试映射"><a href="#测试映射" class="headerlink" title="测试映射"></a>测试映射</h2><pre><code>curl -XGET -i &#39;http://localhost:9200/gb/_analyze?field=tweet&amp;text=Black-cats&#39;
+curl -XGET -i &#39;http://localhost:9200/gb/_analyze?field=tag&amp;text=Black-cats&#39;</code></pre>
+<h3 id="内部对象的映射"><a href="#内部对象的映射" class="headerlink" title="内部对象的映射"></a>内部对象的映射</h3><pre><code>&#123;
+  &quot;gb&quot;: &#123;
+    &quot;tweet&quot;: &#123; &lt;1&gt;
+      &quot;properties&quot;: &#123;
+        &quot;tweet&quot;:            &#123; &quot;type&quot;: &quot;string&quot; &#125;,
+        &quot;user&quot;: &#123; &lt;2&gt;
+          &quot;type&quot;:             &quot;object&quot;,
+          &quot;properties&quot;: &#123;
+            &quot;id&quot;:           &#123; &quot;type&quot;: &quot;string&quot; &#125;,
+            &quot;gender&quot;:       &#123; &quot;type&quot;: &quot;string&quot; &#125;,
+            &quot;age&quot;:          &#123; &quot;type&quot;: &quot;long&quot;   &#125;,
+            &quot;name&quot;:   &#123; &lt;3&gt;
+              &quot;type&quot;:         &quot;object&quot;,
+              &quot;properties&quot;: &#123;
+                &quot;full&quot;:     &#123; &quot;type&quot;: &quot;string&quot; &#125;,
+                &quot;first&quot;:    &#123; &quot;type&quot;: &quot;string&quot; &#125;,
+                &quot;last&quot;:     &#123; &quot;type&quot;: &quot;string&quot; &#125;
+              &#125;
+            &#125;
+          &#125;
+        &#125;
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre>
+<pre><code>&#123;
+    &quot;tweet&quot;:            [elasticsearch, flexible, very],
+    &quot;user.id&quot;:          [@johnsmith],
+    &quot;user.gender&quot;:      [male],
+    &quot;user.age&quot;:         [26],
+    &quot;user.name.full&quot;:   [john, smith],
+    &quot;user.name.first&quot;:  [john],
+    &quot;user.name.last&quot;:   [smith]
+&#125;</code></pre>
+</p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2016/03/02/2016-03-02-elasticsearch-api-2/%20lejingw's blog%20ElasticSearch API 2-搜索、映射和分析" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2016/03/02/2016-03-02-elasticsearch-api-3/" title="ElasticSearch API 3-结构化查询排序"><i class="fa fa-angle-double-left"></i>&nbsp;이전 포스트: ElasticSearch API 3-结构化查询排序</a></span><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2016/03/02/2016-03-02-elasticsearch-api-1/" title="ElasticSearch API 1-基本操作">다음 포스트: ElasticSearch API 1-基本操作&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>

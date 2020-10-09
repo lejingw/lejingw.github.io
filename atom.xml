@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>lejingw&#39;s blog</title>
+  
+  
+  <link href="https://lejingw.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://lejingw.github.io/"/>
+  <updated>2020-10-09T05:56:46.622Z</updated>
+  <id>https://lejingw.github.io/</id>
+  
+  <author>
+    <name>lejingw</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SSH端口转发</title>
+    <link href="https://lejingw.github.io/2017/08/04/2017-08-04-SSH%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/"/>
+    <id>https://lejingw.github.io/2017/08/04/2017-08-04-SSH%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/</id>
+    <published>2017-08-04T02:45:32.000Z</published>
+    <updated>2020-10-09T05:56:46.622Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;端口转发&quot;&gt;&lt;a href=&quot;#端口转发&quot; class=&quot;headerlink&quot; title=&quot;端口转发&quot;&gt;&lt;/a&gt;端口转发&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;ssh -i ~/.ssh/id_rsa  -ND 8157</summary>
+        
+      
+    
+    
+    
+    
+    <category term="linux" scheme="https://lejingw.github.io/tags/linux/"/>
+    
+    <category term="ssh" scheme="https://lejingw.github.io/tags/ssh/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java高并发-3锁优化</title>
+    <link href="https://lejingw.github.io/2017/02/24/2017-02-24-Java%E9%AB%98%E5%B9%B6%E5%8F%91-3%E9%94%81%E4%BC%98%E5%8C%96/"/>
+    <id>https://lejingw.github.io/2017/02/24/2017-02-24-Java%E9%AB%98%E5%B9%B6%E5%8F%91-3%E9%94%81%E4%BC%98%E5%8C%96/</id>
+    <published>2017-02-24T03:35:29.000Z</published>
+    <updated>2020-10-09T05:56:46.620Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;锁优化&quot;&gt;&lt;a href=&quot;#锁优化&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="java" scheme="https://lejingw.github.io/tags/java/"/>
+    
+    <category term="concurrency" scheme="https://lejingw.github.io/tags/concurrency/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>docker-zookeeper</title>
+    <link href="https://lejingw.github.io/2017/02/24/2017-02-24-docker-zookeeper/"/>
+    <id>https://lejingw.github.io/2017/02/24/2017-02-24-docker-zookeeper/</id>
+    <published>2017-02-24T03:35:23.000Z</published>
+    <updated>2020-10-09T05:56:46.622Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;镜像下载&quot;&gt;&lt;a href=&quot;#镜像下载&quot; class=&quot;headerlink&quot; title=&quot;镜像下载&quot;&gt;&lt;/a&gt;镜像下载&lt;/h2&gt;&lt;p&gt;使用官方image&lt;code&gt;docker pull zookeeper&lt;/code&gt;&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="docker" scheme="https://lejingw.github.io/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Scala基本语法</title>
+    <link href="https://lejingw.github.io/2017/02/24/2017-02-24-Scala%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/"/>
+    <id>https://lejingw.github.io/2017/02/24/2017-02-24-Scala%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</id>
+    <published>2017-02-24T03:35:15.000Z</published>
+    <updated>2020-10-09T05:56:46.621Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;Scala-基本语法&quot;&gt;&lt;a href=&quot;#Scala-基本语法&quot; class=&quot;headerlink&quot; title=&quot;Scala 基本语法&quot;&gt;&lt;/a&gt;Scala 基本语法&lt;/h1&gt;&lt;h2 id=&quot;Array-or-ArrayBuffer&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="scala" scheme="https://lejingw.github.io/tags/scala/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java高并发-2JDK对并行程序的支持</title>
+    <link href="https://lejingw.github.io/2017/01/04/2017-01-04-Java%E9%AB%98%E5%B9%B6%E5%8F%91-2JDK%E5%AF%B9%E5%B9%B6%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%94%AF%E6%8C%81/"/>
+    <id>https://lejingw.github.io/2017/01/04/2017-01-04-Java%E9%AB%98%E5%B9%B6%E5%8F%91-2JDK%E5%AF%B9%E5%B9%B6%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%94%AF%E6%8C%81/</id>
+    <published>2017-01-04T01:40:40.000Z</published>
+    <updated>2020-10-09T05:56:46.620Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;同步控制&quot;&gt;&lt;a href=&quot;#同步控制&quot; class=&quot;headerlink&quot; title=&quot;同步控制&quot;&gt;&lt;/a&gt;同步控制&lt;/h2&gt;&lt;h3 id=&quot;重入锁ReentrantLock&quot;&gt;&lt;a href=&quot;#重入锁ReentrantLock&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="java" scheme="https://lejingw.github.io/tags/java/"/>
+    
+    <category term="concurrency" scheme="https://lejingw.github.io/tags/concurrency/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java高并发-1并行程序设计的基本方法</title>
+    <link href="https://lejingw.github.io/2016/12/16/2016-12-16-Java%E9%AB%98%E5%B9%B6%E5%8F%91-1%E5%B9%B6%E8%A1%8C%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95/"/>
+    <id>https://lejingw.github.io/2016/12/16/2016-12-16-Java%E9%AB%98%E5%B9%B6%E5%8F%91-1%E5%B9%B6%E8%A1%8C%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95/</id>
+    <published>2016-12-16T05:58:58.000Z</published>
+    <updated>2020-10-09T05:56:46.619Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;并行程序的基本认识&quot;&gt;&lt;a href=&quot;#并行程序的基本认识&quot; class=&quot;headerlink&quot; title=&quot;并行程序的基本认识&quot;&gt;&lt;/a&gt;并行程序的基本认识&lt;/h2&gt;&lt;h3 id=&quot;几个概念&quot;&gt;&lt;a href=&quot;#几个概念&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="java" scheme="https://lejingw.github.io/tags/java/"/>
+    
+    <category term="concurrency" scheme="https://lejingw.github.io/tags/concurrency/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java高并发-目录</title>
+    <link href="https://lejingw.github.io/2016/12/15/2016-12-15-Java%E9%AB%98%E5%B9%B6%E5%8F%91-%E7%9B%AE%E5%BD%95/"/>
+    <id>https://lejingw.github.io/2016/12/15/2016-12-15-Java%E9%AB%98%E5%B9%B6%E5%8F%91-%E7%9B%AE%E5%BD%95/</id>
+    <published>2016-12-15T04:11:24.000Z</published>
+    <updated>2020-10-09T05:56:46.618Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;1-并行程序设计的基本方法&quot;&gt;&lt;a href=&quot;#1-并行程序设计的基本方法&quot; class=&quot;headerlink&quot; title=&quot;1. 并行程序设计的基本方法&quot;&gt;&lt;/a&gt;1.</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="java" scheme="https://lejingw.github.io/tags/java/"/>
+    
+    <category term="concurrency" scheme="https://lejingw.github.io/tags/concurrency/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>How To Use Hexo</title>
+    <link href="https://lejingw.github.io/2016/12/08/2016-12-08-how-to-use-hexo/"/>
+    <id>https://lejingw.github.io/2016/12/08/2016-12-08-how-to-use-hexo/</id>
+    <published>2016-12-08T05:12:16.000Z</published>
+    <updated>2020-10-09T05:56:46.617Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post.&lt;br&gt;Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for more info.&lt;br&gt;If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;Quick-Start&quot;&gt;&lt;a href=&quot;#Quick-Start&quot; class=&quot;headerlink&quot; title=&quot;Quick Start&quot;&gt;&lt;/a&gt;Quick Start&lt;/h2&gt;&lt;h3 id=&quot;Create-a-new-post&quot;&gt;&lt;a href=&quot;#Create-a-new-post&quot; class=&quot;headerlink&quot; title=&quot;Create a new post&quot;&gt;&lt;/a&gt;Create a new post&lt;/h3&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;$ hexo new &amp;quot;My New Post&amp;quot;&lt;/code&gt;&lt;/pre&gt;</summary>
+    
+    
+    
+    <category term="other" scheme="https://lejingw.github.io/categories/other/"/>
+    
+    
+    <category term="hexo" scheme="https://lejingw.github.io/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM系列-晚期(运行期)优化</title>
+    <link href="https://lejingw.github.io/2016/10/14/2016-10-14-JVM%E7%B3%BB%E5%88%97-%E6%99%9A%E6%9C%9F-%E8%BF%90%E8%A1%8C%E6%9C%9F-%E4%BC%98%E5%8C%96/"/>
+    <id>https://lejingw.github.io/2016/10/14/2016-10-14-JVM%E7%B3%BB%E5%88%97-%E6%99%9A%E6%9C%9F-%E8%BF%90%E8%A1%8C%E6%9C%9F-%E4%BC%98%E5%8C%96/</id>
+    <published>2016-10-14T01:44:37.000Z</published>
+    <updated>2020-10-09T05:56:46.617Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;HotSpot虚拟机内的即时编译器&quot;&gt;&lt;a href=&quot;#HotSpot虚拟机内的即时编译器&quot; class=&quot;headerlink&quot; title=&quot;HotSpot虚拟机内的即时编译器&quot;&gt;&lt;/a&gt;HotSpot虚拟机内的即时编译器&lt;/h2&gt;&lt;h3</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="jvm" scheme="https://lejingw.github.io/tags/jvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM系列-早期(运行期)优化</title>
+    <link href="https://lejingw.github.io/2016/10/09/2016-10-09-JVM%E7%B3%BB%E5%88%97-%E6%97%A9%E6%9C%9F-%E8%BF%90%E8%A1%8C%E6%9C%9F-%E4%BC%98%E5%8C%96/"/>
+    <id>https://lejingw.github.io/2016/10/09/2016-10-09-JVM%E7%B3%BB%E5%88%97-%E6%97%A9%E6%9C%9F-%E8%BF%90%E8%A1%8C%E6%9C%9F-%E4%BC%98%E5%8C%96/</id>
+    <published>2016-10-09T07:31:27.000Z</published>
+    <updated>2020-10-09T05:56:46.616Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;javac编译过程&quot;&gt;&lt;a href=&quot;#javac编译过程&quot; class=&quot;headerlink&quot; title=&quot;javac编译过程&quot;&gt;&lt;/a&gt;javac编译过程&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="jvm" scheme="https://lejingw.github.io/tags/jvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM系列-字节码执行引擎</title>
+    <link href="https://lejingw.github.io/2016/10/08/2016-10-08-JVM%E7%B3%BB%E5%88%97-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/"/>
+    <id>https://lejingw.github.io/2016/10/08/2016-10-08-JVM%E7%B3%BB%E5%88%97-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/</id>
+    <published>2016-10-08T06:23:15.000Z</published>
+    <updated>2020-10-09T05:56:46.615Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;运行时栈帧结构&quot;&gt;&lt;a href=&quot;#运行时栈帧结构&quot; class=&quot;headerlink&quot; title=&quot;运行时栈帧结构&quot;&gt;&lt;/a&gt;运行时栈帧结构&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;            当 前程</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="jvm" scheme="https://lejingw.github.io/tags/jvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM系列-锁优化</title>
+    <link href="https://lejingw.github.io/2016/10/05/2016-10-05-JVM%E7%B3%BB%E5%88%97-%E9%94%81%E4%BC%98%E5%8C%96/"/>
+    <id>https://lejingw.github.io/2016/10/05/2016-10-05-JVM%E7%B3%BB%E5%88%97-%E9%94%81%E4%BC%98%E5%8C%96/</id>
+    <published>2016-10-05T02:35:07.000Z</published>
+    <updated>2020-10-09T05:56:46.615Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;适应性自旋-Adaptive-Spinning&quot;&gt;&lt;a href=&quot;#适应性自旋-Adaptive-Spinning&quot; class=&quot;headerlink&quot; title=&quot;适应性自旋(Adaptive Spinning)&quot;&gt;&lt;/a&gt;适应性自旋(Adaptive</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="jvm" scheme="https://lejingw.github.io/tags/jvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM系列-内存分配</title>
+    <link href="https://lejingw.github.io/2016/09/30/2016-09-30-JVM%E7%B3%BB%E5%88%97-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/"/>
+    <id>https://lejingw.github.io/2016/09/30/2016-09-30-JVM%E7%B3%BB%E5%88%97-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</id>
+    <published>2016-09-30T09:02:15.000Z</published>
+    <updated>2020-10-09T05:56:46.614Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;内存划分&quot;&gt;&lt;a href=&quot;#内存划分&quot; class=&quot;headerlink&quot; title=&quot;内存划分&quot;&gt;&lt;/a&gt;内存划分&lt;/h2&gt;&lt;p&gt;在jvm规范中,</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="jvm" scheme="https://lejingw.github.io/tags/jvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Docker Usage</title>
+    <link href="https://lejingw.github.io/2016/05/23/2016-05-23-Docker-Usage/"/>
+    <id>https://lejingw.github.io/2016/05/23/2016-05-23-Docker-Usage/</id>
+    <published>2016-05-23T04:04:41.000Z</published>
+    <updated>2020-10-09T05:56:46.613Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;Docker-Usage&quot;&gt;&lt;a href=&quot;#Docker-Usage&quot; class=&quot;headerlink&quot; title=&quot;Docker Usage&quot;&gt;&lt;/a&gt;Docker Usage&lt;/h1&gt;&lt;h2 id=&quot;parameter&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="docker" scheme="https://lejingw.github.io/tags/docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux IO模式</title>
+    <link href="https://lejingw.github.io/2016/03/15/2016-03-15-linux-io%E6%A8%A1%E5%BC%8F/"/>
+    <id>https://lejingw.github.io/2016/03/15/2016-03-15-linux-io%E6%A8%A1%E5%BC%8F/</id>
+    <published>2016-03-15T07:58:54.000Z</published>
+    <updated>2020-10-09T05:56:46.611Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;IO模式&quot;&gt;&lt;a href=&quot;#IO模式&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="java" scheme="https://lejingw.github.io/tags/java/"/>
+    
+    <category term="io" scheme="https://lejingw.github.io/tags/io/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Use Jmeter#1</title>
+    <link href="https://lejingw.github.io/2016/03/15/2016-03-15-use-jmeter-1/"/>
+    <id>https://lejingw.github.io/2016/03/15/2016-03-15-use-jmeter-1/</id>
+    <published>2016-03-15T07:58:48.000Z</published>
+    <updated>2020-10-09T05:56:46.612Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;run-jmeter&quot;&gt;&lt;a href=&quot;#run-jmeter&quot; class=&quot;headerlink&quot; title=&quot;run jmeter&quot;&gt;&lt;/a&gt;run jmeter&lt;/h1&gt;&lt;h2 id=&quot;non-gui-mode&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="jmeter" scheme="https://lejingw.github.io/tags/jmeter/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ElasticSearch API 5-结构化搜索</title>
+    <link href="https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-5/"/>
+    <id>https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-5/</id>
+    <published>2016-03-15T07:58:25.000Z</published>
+    <updated>2020-10-09T05:56:46.610Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;结构化搜索&quot;&gt;&lt;a href=&quot;#结构化搜索&quot; class=&quot;headerlink&quot; title=&quot;结构化搜索&quot;&gt;&lt;/a&gt;结构化搜索&lt;/h1&gt;&lt;h2 id=&quot;构建测试数据&quot;&gt;&lt;a href=&quot;#构建测试数据&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="elasticsearch" scheme="https://lejingw.github.io/tags/elasticsearch/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ElasticSearch API 4-索引管理</title>
+    <link href="https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-4/"/>
+    <id>https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-4/</id>
+    <published>2016-03-15T07:58:16.000Z</published>
+    <updated>2020-10-09T05:56:46.609Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;索引管理&quot;&gt;&lt;a href=&quot;#索引管理&quot; class=&quot;headerlink&quot; title=&quot;索引管理&quot;&gt;&lt;/a&gt;索引管理&lt;/h1&gt;&lt;h2 id=&quot;创建索引&quot;&gt;&lt;a href=&quot;#创建索引&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="elasticsearch" scheme="https://lejingw.github.io/tags/elasticsearch/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ElasticSearch API 3-结构化查询排序</title>
+    <link href="https://lejingw.github.io/2016/03/02/2016-03-02-elasticsearch-api-3/"/>
+    <id>https://lejingw.github.io/2016/03/02/2016-03-02-elasticsearch-api-3/</id>
+    <published>2016-03-02T05:33:00.000Z</published>
+    <updated>2020-10-09T05:56:46.608Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;查询子句&quot;&gt;&lt;a href=&quot;#查询子句&quot; class=&quot;headerlink&quot; title=&quot;查询子句&quot;&gt;&lt;/a&gt;查询子句&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;curl -XGET</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="elasticsearch" scheme="https://lejingw.github.io/tags/elasticsearch/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ElasticSearch API 2-搜索、映射和分析</title>
+    <link href="https://lejingw.github.io/2016/03/02/2016-03-02-elasticsearch-api-2/"/>
+    <id>https://lejingw.github.io/2016/03/02/2016-03-02-elasticsearch-api-2/</id>
+    <published>2016-03-02T05:32:00.000Z</published>
+    <updated>2020-10-09T05:56:46.607Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;空搜索&quot;&gt;&lt;a href=&quot;#空搜索&quot; class=&quot;headerlink&quot; title=&quot;空搜索&quot;&gt;&lt;/a&gt;空搜索&lt;/h2&gt;&lt;p&gt;template:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;curl -XGET -i</summary>
+        
+      
+    
+    
+    
+    <category term="technology" scheme="https://lejingw.github.io/categories/technology/"/>
+    
+    
+    <category term="elasticsearch" scheme="https://lejingw.github.io/tags/elasticsearch/"/>
+    
+  </entry>
+  
+</feed>

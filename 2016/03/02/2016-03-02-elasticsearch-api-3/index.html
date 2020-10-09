@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>ElasticSearch API 3-结构化查询排序 · lejingw's blog</title><meta name="description" content="查询子句curl -XGET &amp;#39;http://localhost:9200/_search?pretty&amp;#39; -d &amp;#39;&amp;#123;
+    &amp;quot;query&amp;quot;: &amp;#123;
+        &amp;quot;match&amp;quot;: &amp;#123;
+         "><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>ElasticSearch API 3-结构化查询排序</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2016-03-02</span><span class="meta-item"><i class="fa fa-folder"></i><span>&nbsp;</span><a href="/categories/technology/" title="technology" class="a-tag">technology</a><span>&nbsp;</span></span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/elasticsearch/" title="elasticsearch" class="a-tag">elasticsearch</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="查询子句"><a href="#查询子句" class="headerlink" title="查询子句"></a>查询子句</h2><pre><code>curl -XGET &#39;http://localhost:9200/_search?pretty&#39; -d &#39;&#123;
+    &quot;query&quot;: &#123;
+        &quot;match&quot;: &#123;
+            &quot;tweet&quot;: &quot;elasticsearch&quot;
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<h2 id="合并多子句"><a href="#合并多子句" class="headerlink" title="合并多子句"></a>合并多子句</h2><pre><code>curl -XGET &#39;http://localhost:9200/_search?pretty&#39; -d &#39;&#123;
+    &quot;query&quot;: &#123;
+        &quot;bool&quot;: &#123;
+            &quot;must&quot;: &#123; &quot;match&quot;:      &#123; &quot;email&quot;: &quot;business opportunity&quot; &#125;&#125;,
+            &quot;should&quot;: [
+                 &#123; &quot;match&quot;:         &#123; &quot;starred&quot;: true &#125;&#125;,
+                 &#123; &quot;bool&quot;: &#123;
+                       &quot;must&quot;:      &#123; &quot;folder&quot;: &quot;inbox&quot; &#125;&#125;,
+                       &quot;must_not&quot;:  &#123; &quot;spam&quot;: true &#125;&#125;
+                 &#125;&#125;
+            ],
+            &quot;minimum_should_match&quot;: 1
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<h2 id="查询与过滤"><a href="#查询与过滤" class="headerlink" title="查询与过滤"></a>查询与过滤</h2><p>一般来说查询语句要比过滤语句更耗时，并且查询结果也不可缓存。</p>
+<blockquote>
+<p>原则上来说，使用查询语句做<strong>全文本搜索</strong>或其他需要进行<strong>相关性评分</strong>的时候，剩下的全部用<strong>过滤语句</strong></p>
+</blockquote>
+<h2 id="最重要的查询过滤语句"><a href="#最重要的查询过滤语句" class="headerlink" title="最重要的查询过滤语句"></a>最重要的查询过滤语句</h2><h3 id="term过滤"><a href="#term过滤" class="headerlink" title="term过滤"></a>term过滤</h3><p>term主要用于精确匹配哪些值，比如数字，日期，布尔值或 not_analyzed的字符串(未经分析的文本数据类型)：</p>
+<pre><code> &#123; &quot;term&quot;: &#123; &quot;age&quot;:    26           &#125;&#125;
+ &#123; &quot;term&quot;: &#123; &quot;date&quot;:   &quot;2014-09-01&quot; &#125;&#125;
+ &#123; &quot;term&quot;: &#123; &quot;public&quot;: true         &#125;&#125;
+ &#123; &quot;term&quot;: &#123; &quot;tag&quot;:    &quot;full_text&quot;  &#125;&#125;</code></pre>
+<h3 id="terms过滤"><a href="#terms过滤" class="headerlink" title="terms过滤"></a>terms过滤</h3><p>terms 跟 term 有点类似，但 terms 允许指定多个匹配条件。 如果某个字段指定了多个值，那么文档需要一起去做匹配：</p>
+<pre><code>&#123;
+    &quot;terms&quot;: &#123;
+        &quot;tag&quot;: [ &quot;search&quot;, &quot;full_text&quot;, &quot;nosql&quot; ]
+    &#125;
+&#125;</code></pre>
+<h3 id="range-过滤"><a href="#range-过滤" class="headerlink" title="range 过滤"></a>range 过滤</h3><pre><code>&#123;
+    &quot;range&quot;: &#123;
+        &quot;age&quot;: &#123;
+            &quot;gte&quot;:  20,
+            &quot;lt&quot;:   30
+        &#125;
+    &#125;
+&#125;</code></pre>
+<p>gt :: 大于<br>gte:: 大于等于<br>lt :: 小于<br>lte:: 小于等于</p>
+<h3 id="exists-和-missing-过滤"><a href="#exists-和-missing-过滤" class="headerlink" title="exists 和 missing 过滤"></a>exists 和 missing 过滤</h3><h3 id="bool-过滤"><a href="#bool-过滤" class="headerlink" title="bool 过滤"></a>bool 过滤</h3><pre><code>&#123;
+    &quot;bool&quot;: &#123;
+        &quot;must&quot;:     &#123; &quot;term&quot;: &#123; &quot;folder&quot;: &quot;inbox&quot; &#125;&#125;,
+        &quot;must_not&quot;: &#123; &quot;term&quot;: &#123; &quot;tag&quot;:    &quot;spam&quot;  &#125;&#125;,
+        &quot;should&quot;: [
+                    &#123; &quot;term&quot;: &#123; &quot;starred&quot;: true   &#125;&#125;,
+                    &#123; &quot;term&quot;: &#123; &quot;unread&quot;:  true   &#125;&#125;
+        ]
+    &#125;
+&#125;</code></pre>
+<h3 id="match-all-查询"><a href="#match-all-查询" class="headerlink" title="match_all 查询"></a>match_all 查询</h3><p>此查询常用于合并过滤条件。 比如说你需要检索所有的邮箱,所有的文档相关性都是相同的，所以得到的_score为1</p>
+<h3 id="match-查询"><a href="#match-查询" class="headerlink" title="match 查询"></a>match 查询</h3><p>match查询是一个标准查询，不管你需要全文本查询还是精确查询基本上都要用到它。<br>如果你使用 match 查询一个全文本字段，它会在真正查询之前用分析器先分析match一下查询字符：</p>
+<pre><code>&#123;
+    &quot;match&quot;: &#123;
+        &quot;tweet&quot;: &quot;About Search&quot;
+    &#125;
+&#125;</code></pre>
+<p>如果用match下指定了一个确切值，在遇到数字，日期，布尔值或者not_analyzed 的字符串时，它将为你搜索你给定的值：</p>
+<pre><code>&#123; &quot;match&quot;: &#123; &quot;age&quot;:    26           &#125;&#125;
+&#123; &quot;match&quot;: &#123; &quot;date&quot;:   &quot;2014-09-01&quot; &#125;&#125;
+&#123; &quot;match&quot;: &#123; &quot;public&quot;: true         &#125;&#125;
+&#123; &quot;match&quot;: &#123; &quot;tag&quot;:    &quot;full_text&quot;  &#125;&#125;</code></pre>
+<blockquote>
+<p>提示： 做精确匹配搜索时，你最好用过滤语句，因为过滤语句可以缓存数据。</p>
+</blockquote>
+<h3 id="bool-查询"><a href="#bool-查询" class="headerlink" title="bool 查询"></a>bool 查询</h3><pre><code>curl -XGET -i &#39;http://localhost:9200/website/_search?pretty&#39; -d &#39;&#123;
+    &quot;query&quot;:&#123;
+        &quot;bool&quot;: &#123;
+            &quot;must&quot;:     &#123; &quot;match&quot;: &#123; &quot;title&quot;: &quot;first&quot; &#125;&#125;,
+            &quot;must_not&quot;: &#123; &quot;match&quot;: &#123; &quot;tag&quot;:   &quot;11&quot; &#125;&#125;,
+            &quot;should&quot;: [
+                &#123; &quot;match&quot;: &#123; &quot;tag&quot;: &quot;starred&quot; &#125;&#125;,
+                &#123; &quot;range&quot;: &#123; &quot;date&quot;: &#123; &quot;gte&quot;: &quot;2014/01/01&quot; &#125;&#125;&#125;
+            ]
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<blockquote>
+<p>should 查询指定文档，有则可以为文档相关性加分</p>
+</blockquote>
+<h3 id="带过滤的查询语句"><a href="#带过滤的查询语句" class="headerlink" title="带过滤的查询语句"></a>带过滤的查询语句</h3><pre><code>curl -XGET -i &#39;http://localhost:9200/website/_search?pretty&#39; -d &#39;&#123;
+    &quot;query&quot;: &#123;
+        &quot;filtered&quot;: &#123;
+            &quot;query&quot;:  &#123; &quot;match&quot;: &#123; &quot;title&quot;: &quot;first&quot; &#125;&#125;,
+            &quot;filter&quot;: &#123; &quot;term&quot;: &#123; &quot;tags&quot;: &quot;testing&quot; &#125;&#125;
+        &#125;
+    &#125;
+&#125;&#39;</code></pre>
+<h3 id="验证查询语句"><a href="#验证查询语句" class="headerlink" title="验证查询语句"></a>验证查询语句</h3><pre><code>curl -XGET -i &#39;http://localhost:9200/_validate/query?explain&amp;pretty&#39; -d &#39;&#123;
+   &quot;query&quot;: &#123;
+      &quot;match&quot; : &#123;
+         &quot;tweet&quot; : &quot;really powerful&quot;
+      &#125;
+   &#125;
+&#125;&#39;</code></pre>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><pre><code>curl -XGET -i &#39;http://localhost:9200/website/blog/_search&#39; -d &#39;&#123;
+    &quot;query&quot;:&#123;
+        &quot;filtered&quot;:&#123;
+            &quot;filter&quot;:&#123;
+                &quot;query&quot;:&#123;
+                    &quot;match&quot;:&#123;
+                        &quot;title&quot;:&quot;first&quot;
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;,
+    &quot;sort&quot;:[
+        &#123;&quot;date&quot;:&#123;&quot;order&quot;:&quot;desc&quot;&#125;&#125;
+        &#123;&quot;views&quot;:&#123;&quot;order&quot;:&quot;asc&quot;&#125;&#125;
+    ]
+&#125;&#39;</code></pre>
+<pre><code>curl -XGET -i &#39;http://localhost:9200/_search?sort=date:desc&amp;sort=views&amp;title=first&#39;</code></pre>
+<h3 id="为多值字段排序"><a href="#为多值字段排序" class="headerlink" title="为多值字段排序"></a>为多值字段排序</h3><pre><code>&quot;sort&quot;: &#123;
+    &quot;dates&quot;: &#123;
+        &quot;order&quot;: &quot;asc&quot;,
+        &quot;mode&quot;:  &quot;min&quot;
+    &#125;
+&#125;</code></pre>
+<blockquote>
+<p>min, max, avg 或 sum</p>
+</blockquote>
+<h2 id="相关性分析"><a href="#相关性分析" class="headerlink" title="相关性分析"></a>相关性分析</h2><pre><code>curl -XGET &#39;http://localhost:9200/_search?explain&amp;format=yaml&#39; -d &#39;&#123;
+    &quot;query&quot;:&#123;
+        &quot;match&quot;:&#123;&quot;title&quot;:&quot;second&quot;&#125;
+    &#125;
+&#125;&#39;
+
+curl -XGET &#39;http://localhost:9200/website/blog/123/_explain?format=yaml&#39; -d &#39;&#123;
+    &quot;query&quot;:&#123;
+        &quot;match&quot;:&#123;&quot;title&quot;:&quot;second&quot;&#125;
+    &#125;
+&#125;&#39;</code></pre>
+</p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2016/03/02/2016-03-02-elasticsearch-api-3/%20lejingw's blog%20ElasticSearch API 3-结构化查询排序" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2016/03/15/2016-03-15-elasticsearch-api-4/" title="ElasticSearch API 4-索引管理"><i class="fa fa-angle-double-left"></i>&nbsp;이전 포스트: ElasticSearch API 4-索引管理</a></span><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2016/03/02/2016-03-02-elasticsearch-api-2/" title="ElasticSearch API 2-搜索、映射和分析">다음 포스트: ElasticSearch API 2-搜索、映射和分析&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>

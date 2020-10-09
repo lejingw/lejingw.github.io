@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>SSH端口转发 · lejingw's blog</title><meta name="description" content="端口转发ssh -i ~/.ssh/id_rsa  -ND 8157 hadoop@masterNodeIP
+
+
+
+操作系统
+Chrome 位置
+
+
+
+Mac OS X
+/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+
+Li"><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>SSH端口转发</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2017-08-04</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/linux/" title="linux" class="a-tag">linux</a><span>&nbsp;</span><a href="/tags/ssh/" title="ssh" class="a-tag">ssh</a><span>&nbsp;</span></span></p><p class="post-abstract"><h3 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h3><pre><code>ssh -i ~/.ssh/id_rsa  -ND 8157 hadoop@masterNodeIP</code></pre>
+<table>
+<thead>
+<tr>
+<th>操作系统</th>
+<th>Chrome 位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mac OS X</td>
+<td>/Applications/Google Chrome.app/Contents/MacOS/Google Chrome</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>/usr/bin/google-chrome</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</td>
+</tr>
+</tbody></table>
+<pre><code>chrome --proxy-server=&quot;socks5://localhost:8157&quot; \
+       --host-resolver-rules=&quot;MAP * 0.0.0.0 , EXCLUDE localhost&quot; \
+       --user-data-dir=/tmp/</code></pre>
+<pre><code># 本地端口转发
+ssh -i ~/.ssh/id_rsa -N -L 8157:masterNodeIP:8088 hadoop@masterNodeIP</code></pre>
+<h3 id="eg-nat网络下，访问vm1-8088"><a href="#eg-nat网络下，访问vm1-8088" class="headerlink" title="eg:nat网络下，访问vm1:8088"></a>eg:nat网络下，访问vm1:8088</h3><p>proxy_chrome.sh</p>
+<pre><code>#!/bin/bash
+
+nohup ssh -i .ssh/id_rsa -ND 8157 -p 20122 root@localhost 2&gt;&amp;1 &amp;
+
+cd /Applications/Google\ Chrome.app/Contents/MacOS
+
+./Google\ Chrome --proxy-server=&quot;socks5://localhost:8157&quot; \
+    --host-resolver-rules=&quot;MAP * 0.0.0.0 , EXCLUDE localhost&quot; \
+    --user-data-dir=/tmp/ http://vm1:8088</code></pre>
+<h3 id="通过SSH穿透jumpserver访问内部主机"><a href="#通过SSH穿透jumpserver访问内部主机" class="headerlink" title="通过SSH穿透jumpserver访问内部主机"></a>通过SSH穿透jumpserver访问内部主机</h3><ol>
+<li>目前的简单架构<br> A（Client）以Macbook为例【内网：192.168.2.3】<br> B (Jumpserver Host) 阿里云跳板机  <pre><code> 【内网：10.1.175.1   外网：121.11.11.134】</code></pre>
+ C  阿里内部主机【内网：10.1.175.2】</li>
+<li>实现目的：<br> A 通过SSH直接登陆到C （不需要先登陆到B，再通过SSH登陆到C）</li>
+<li>A上如何设置（A主机用户user1,B主机用户admin,C用户主机user2）</li>
+</ol>
+<h3 id="Setps"><a href="#Setps" class="headerlink" title="Setps"></a>Setps</h3><ol>
+<li>创建ssh-key，并把id_rsa.pub公钥注入B主机用户admin的~/.ssh/authorized_keys</li>
+<li>A主机<pre><code>cd .ssh/
+vim config
+Host B
+     user admin
+     port 4777             #####jumpserver的ssh端口####
+     hostname 121.11.11.134
+Host C
+     hostname 10.1.175.2
+     ProxyCommand ssh B -W %h:%p        #####%h 表示 hostname %p 表示 port######
+     user user2</code></pre>
+</li>
+<li>测试<br> <code>$：ssh C  ######进行登陆</code></li>
+</ol>
+</p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2017/08/04/2017-08-04-SSH端口转发/%20lejingw's blog%20SSH端口转发" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2017/02/24/2017-02-24-Java%E9%AB%98%E5%B9%B6%E5%8F%91-3%E9%94%81%E4%BC%98%E5%8C%96/" title="Java高并发-3锁优化">다음 포스트: Java高并发-3锁优化&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>

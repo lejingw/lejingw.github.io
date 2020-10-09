@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>Java高并发-2JDK对并行程序的支持 · lejingw's blog</title><meta name="description" content="同步控制重入锁ReentrantLock一个线程可以多次获得锁, 也必须释放相同次数的锁.
+中断响应lock.lockInterruptibly();
+...
+lock.interrupt();
+锁申请等待限时lock.tryLock(5, TimeUnit.SECONDS)
+公平锁重入锁的好搭档:"><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>Java高并发-2JDK对并行程序的支持</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2017-01-04</span><span class="meta-item"><i class="fa fa-folder"></i><span>&nbsp;</span><a href="/categories/technology/" title="technology" class="a-tag">technology</a><span>&nbsp;</span></span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/java/" title="java" class="a-tag">java</a><span>&nbsp;</span><a href="/tags/concurrency/" title="concurrency" class="a-tag">concurrency</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="同步控制"><a href="#同步控制" class="headerlink" title="同步控制"></a>同步控制</h2><h3 id="重入锁ReentrantLock"><a href="#重入锁ReentrantLock" class="headerlink" title="重入锁ReentrantLock"></a>重入锁ReentrantLock</h3><p>一个线程可以多次获得锁, 也必须释放相同次数的锁.</p>
+<h4 id="中断响应"><a href="#中断响应" class="headerlink" title="中断响应"></a>中断响应</h4><pre><code>lock.lockInterruptibly();
+...
+lock.interrupt();</code></pre>
+<h4 id="锁申请等待限时"><a href="#锁申请等待限时" class="headerlink" title="锁申请等待限时"></a>锁申请等待限时</h4><p><code>lock.tryLock(5, TimeUnit.SECONDS)</code></p>
+<h4 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h4><h3 id="重入锁的好搭档-Condition条件"><a href="#重入锁的好搭档-Condition条件" class="headerlink" title="重入锁的好搭档:Condition条件"></a>重入锁的好搭档:Condition条件</h3><p>wait()和nofity()方法是和synchronized关键字配合使用<br>Condition是与重入锁相关联的</p>
+<pre><code>void await() throws InterruptedException;
+void awaitUniterruptibly();
+long awaitNanos(long nanosTimeout) throws InterruptedException;
+boolean await(long time, TimeUnit unit) throws InterruptedException;
+boolean awaitUnit(Date deadline) throws InterruptedException;
+void signal();
+void signalAll();</code></pre>
+<h3 id="允许多个线程同时访问-信号量-Semaphore"><a href="#允许多个线程同时访问-信号量-Semaphore" class="headerlink" title="允许多个线程同时访问:信号量(Semaphore)"></a>允许多个线程同时访问:信号量(Semaphore)</h3><pre><code>public Semaphore(int permits)
+public Semaphore(int permits, boolean fair)
+
+public void acquire()
+public void acquireUninterruptibly()
+public boolean tryAcquire()
+public boolean tryAcquire(long timeout, TimeUnit unit)
+public void release()</code></pre>
+<h3 id="倒计数器-ConuntDownLatch"><a href="#倒计数器-ConuntDownLatch" class="headerlink" title="倒计数器:ConuntDownLatch"></a>倒计数器:ConuntDownLatch</h3><h3 id="循环栅栏-CyclicBarrier"><a href="#循环栅栏-CyclicBarrier" class="headerlink" title="循环栅栏:CyclicBarrier"></a>循环栅栏:CyclicBarrier</h3><pre><code>public CyclicBarrier(int parties, Runnable barrierAction)</code></pre>
+<h3 id="线程阻塞工具类-LockSupport"><a href="#线程阻塞工具类-LockSupport" class="headerlink" title="线程阻塞工具类: LockSupport"></a>线程阻塞工具类: LockSupport</h3><p><code>LockSupport.park()</code>阻塞当前线程<br>即时unpark()操作发生在park之前,它也可以使下一次的park()操作立即返回<br>另外处于park()状态的线程, 发生了interrupt()操作, 也会使该线程响应这个中断</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">FIFOMutex</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> <span class="token keyword">final</span> AtomicBoolean locked <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AtomicBoolean</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">private</span> <span class="token keyword">final</span> Queue<span class="token operator">&lt;</span>Thread<span class="token operator">></span> waiters <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConcurrentLinkedQueue</span><span class="token operator">&lt;</span>Thread<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span> wasInterrupted <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    Thread current <span class="token operator">=</span> Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    waiters<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>current<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// Block while not first in queue or cannot acquire lock</span>
+    <span class="token keyword">while</span><span class="token punctuation">(</span>waiters<span class="token punctuation">.</span><span class="token function">peek</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> current <span class="token operator">||</span> <span class="token operator">!</span>locked<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+      LockSupport<span class="token punctuation">.</span><span class="token function">park</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>Thread<span class="token punctuation">.</span><span class="token function">interrupted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// ignore interrupts while waiting</span>
+        wasInterrupted <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+    waiters<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>wasInterrupted<span class="token punctuation">)</span>        <span class="token comment" spellcheck="true">// reassert interrupt status on exit</span>
+      current<span class="token punctuation">.</span><span class="token function">interrupt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    locked<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    LockSupport<span class="token punctuation">.</span><span class="token function">unpark</span><span class="token punctuation">(</span>waiters<span class="token punctuation">.</span><span class="token function">peek</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="线程复用-线程池"><a href="#线程复用-线程池" class="headerlink" title="线程复用: 线程池"></a>线程复用: 线程池</h2><h3 id="计划任务"><a href="#计划任务" class="headerlink" title="计划任务"></a>计划任务</h3><ul>
+<li>scheduleAtFixedRate<br>如果配置的周期太短(小于任务执行的时长), 则上个任务执行完后, 立即执行下一个任务 </li>
+<li>scheduleWithFixedDelay<br>上一个任务执行完后, 等待固定的周期, 开始执行下一个任务</li>
+</ul>
+<blockquote>
+<p>如果任务本身抛出了异常, 那么后续所有任务都会停止调度, 因此, 必须保证异常被及时处理</p>
+</blockquote>
+<h3 id="核心线程池的内部实现"><a href="#核心线程池的内部实现" class="headerlink" title="核心线程池的内部实现"></a>核心线程池的内部实现</h3><p>内部都使用了<code>ThreadPoolExecutor</code>:  </p>
+<ul>
+<li>corePoolSize 指定了线程池中的线程数量</li>
+<li>maximunPoolSize</li>
+<li>keepAliveTime 当线程数量超过corePoolSize时, 多余的空闲线程的存活时间</li>
+<li>unit keepAliveTime的单位</li>
+<li>workQueue 任务队列, 被提交但未被执行的任务</li>
+<li>threadFactory 线程工程, 用于创建线程</li>
+<li>handler 拒绝策略, 当任务太多来不及处理, 如何拒绝任务</li>
+</ul>
+<p>在ThreadPoolExecutor的构造函数中可以使用以下几种BlockingQueue:</p>
+<ul>
+<li>直接提交的队列: 由SynchronousQueue对象提供. SynchronousQueue没有容量, 提交的任务不会被真实的保存. 每次插入都需要等待一个响应的删除操作. 反之, 每次删除都需要等待一个插入的操作. 使用SynchronousQueue队列, 通常要设置很大的maximunPoolSize值, 否则很容易执行拒绝策略.</li>
+<li>有界的任务队列: 可以使用ArrayBlockingQueue实现. 有界队列仅当任务队列装满时, 才可能将线程数提升到corePoolSize以上, 若大于maximumPoolSize, 则执行拒绝策略. 换言之, 除非系统非常繁忙, 否则确保核心线程数维持在corePoolSize.</li>
+<li>无界的任务队列: 可以使用LinkedBlockingQueue实现. 当系统的线程数达到corePoolSize后, 就不会续集增加. 直到系统内存耗尽.</li>
+<li>优先任务队列: 通过PriorityBlockingQueue实现.</li>
+</ul>
+<h2 id="分而治之-Fork-Join框架"><a href="#分而治之-Fork-Join框架" class="headerlink" title="分而治之: Fork/Join框架"></a>分而治之: Fork/Join框架</h2><p>向ForkJoinPool线程池提交一个ForkJoinTask任务(RecursiveAction和RecursiveTask)</p>
+<pre><code>public class CountTask extends RecursiveTask&lt;Long&gt;&#123;
+  private static final int THRESHOLD = 10000;
+  private long start;
+  private long end;
+  public CountTask(long start, long end)&#123;
+    this.start = start;
+    this.end = end;
+  &#125;
+
+  public Long compute()&#123;
+    long sum = 0;
+    boolean canCompute = (end-start)&lt;THRESHOLD;
+    if(canCopute)&#123;
+      for(long i=start;i&lt;=end;i++)    sum +=i;
+    &#125;else&#123;
+      long step = (start - end) / 100;
+      ArrayList&lt;CountTask&gt; subTasks = new ArrayList&lt;CountTask&gt;();
+      long pos = start;
+      for(int i=0;i&lt;100;i++)&#123;
+        long lastOne = pos + step;
+        if(lastOne &gt; end) lastOne = end;
+        CountTask subTask = new CountTask(pos, lastOne);
+        pos += step + 1;
+        subTasks.add(subTask);
+        subTask.fork();
+      &#125;
+      for(CountTask task : subTasks)&#123;
+        sum += task.join();
+      &#125;
+    &#125;
+    return sum;
+  &#125;
+
+  public static void main(String[] args)&#123;
+    ForkJoinPool forkJoinPool = new ForkJoinPool();
+    CountTask task = new CountTask(0, 200000L);
+    ForkJoinTask&lt;Long&gt; result = forkJoinPool.submit(task);
+    try&#123;
+      long res = result.get();
+      System.out.println(&quot;sum=&quot; + res);
+    &#125;catch(InterruptedException e)&#123;e.printStackTrace();&#125;
+    catch(ExecutionException e)&#123;e.printStackTrace();&#125;
+  &#125;
+&#125;</code></pre>
+<h2 id="JDK并发容器"><a href="#JDK并发容器" class="headerlink" title="JDK并发容器"></a>JDK并发容器</h2><ul>
+<li>ConcurrentHashMap</li>
+<li>CopyOnWriteArrayList<br>读操作远大于写操作</li>
+<li>ConcurrentLinkedQueue<br>实现复杂, 并发性能好, tail更新不是及时的, 会跳跃两个元素</li>
+<li>BlockingQueue<br>具体实现有ArrayBlockingQueue和LinkedBlockingQueue<br>put() 和 take() 会阻塞<br>offer() 和 poll() 会直接返回boolean</li>
+<li>ConcurrentSkipListMap<br>优点是快速查找, 空间换时间, 随机分布, 最底层维护了跳表内的所有元素. </li>
+</ul>
+</p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2017/01/04/2017-01-04-Java高并发-2JDK对并行程序的支持/%20lejingw's blog%20Java高并发-2JDK对并行程序的支持" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2017/02/24/2017-02-24-Scala%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" title="Scala基本语法"><i class="fa fa-angle-double-left"></i>&nbsp;이전 포스트: Scala基本语法</a></span><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2016/12/16/2016-12-16-Java%E9%AB%98%E5%B9%B6%E5%8F%91-1%E5%B9%B6%E8%A1%8C%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95/" title="Java高并发-1并行程序设计的基本方法">다음 포스트: Java高并发-1并行程序设计的基本方法&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>

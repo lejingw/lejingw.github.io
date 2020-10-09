@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>Linux IO模式 · lejingw's blog</title><meta name="description" content="IO模式当发生一次read时，会经历两个阶段:
+
+等待数据准备
+将数据从内核空间拷贝到进程空间
+
+有这两个阶段，产生了一下五种网络模式:
+
+阻塞I/O (blocking IO)
+非阻塞I/O (nonblocking IO)
+I/O多路复用 (IO multiplexing)
+信号驱动I/O （s"><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>Linux IO模式</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2016-03-15</span><span class="meta-item"><i class="fa fa-folder"></i><span>&nbsp;</span><a href="/categories/technology/" title="technology" class="a-tag">technology</a><span>&nbsp;</span></span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/java/" title="java" class="a-tag">java</a><span>&nbsp;</span><a href="/tags/io/" title="io" class="a-tag">io</a><span>&nbsp;</span></span></p><p class="post-abstract"><h1 id="IO模式"><a href="#IO模式" class="headerlink" title="IO模式"></a>IO模式</h1><p>当发生一次read时，会经历两个阶段:</p>
+<ol>
+<li>等待数据准备</li>
+<li>将数据从内核空间拷贝到进程空间</li>
+</ol>
+<p>有这两个阶段，产生了一下五种网络模式:</p>
+<ul>
+<li>阻塞I/O (blocking IO)</li>
+<li>非阻塞I/O (nonblocking IO)</li>
+<li>I/O多路复用 (IO multiplexing)</li>
+<li>信号驱动I/O （signal driven IO)</li>
+<li>异步I/O (asynchronous IO)</li>
+</ul>
+<blockquote>
+<p>注：由于signal driven IO在实际中并不常用，所以我这只提及剩下的四种IO Model。</p>
+</blockquote>
+<h2 id="阻塞I-O-blocking-IO"><a href="#阻塞I-O-blocking-IO" class="headerlink" title="阻塞I/O (blocking IO)"></a>阻塞I/O (blocking IO)</h2><p><img src="/images/io/blocking_io.png" alt="阻塞I/O"></p>
+<h2 id="非阻塞I-O-（nonblocking-IO"><a href="#非阻塞I-O-（nonblocking-IO" class="headerlink" title="非阻塞I/O （nonblocking IO)"></a>非阻塞I/O （nonblocking IO)</h2><p><img src="/images/io/nonblocking_io.png" alt="非阻塞I/O"></p>
+<blockquote>
+<p>nonblocking IO的特点是用户进程需要不断的主动询问kernel数据好了没有。一旦kernel中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。</p>
+</blockquote>
+<h2 id="I-O多路复用-IO-multiplexing"><a href="#I-O多路复用-IO-multiplexing" class="headerlink" title="I/O多路复用 (IO multiplexing)"></a>I/O多路复用 (IO multiplexing)</h2><p>IO multiplexing就是我们说的select，poll，epoll，有些地方也称这种IO方式为event driven IO。select/epoll的好处就在于单个process就可以同时处理多个网络连接的IO。它的基本原理就是select，poll，epoll这个function会不断的轮询所负责的所有socket，当某个socket有数据到达了，就通知用户进程。</p>
+<p><img src="/images/io/io_multiplexing.png" alt="多路复用I/O"></p>
+<p><strong>当用户进程调用了select，那么整个进程会被block</strong>，而同时，kernel会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从kernel拷贝到用户进程。</p>
+<blockquote>
+<p>所以，I/O 多路复用的特点是通过一种机制一个进程能同时等待多个文件描述符，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
+</blockquote>
+<h2 id="异步I-O-asynchronous-IO"><a href="#异步I-O-asynchronous-IO" class="headerlink" title="异步I/O (asynchronous IO)"></a>异步I/O (asynchronous IO)</h2><p><img src="/images/io/asynchronous_io.png" alt="异步I/O"></p>
+<h1 id="I-O多路复用之select、poll、epoll"><a href="#I-O多路复用之select、poll、epoll" class="headerlink" title="I/O多路复用之select、poll、epoll"></a>I/O多路复用之select、poll、epoll</h1><h2 id="select、poll"><a href="#select、poll" class="headerlink" title="select、poll"></a>select、poll</h2><blockquote>
+<p>select的一个确定在于单个进程能够监视的文件描述符的数量存在最大限制，在linux上一般为1024<br>poll没有最大数量的限制，但是和select一样，都需要在返回后，<strong>通过遍历文件描述符来获取已经就绪的socket</strong>,随着监视的描述符数量的增长，其效率也会线性下降。</p>
+</blockquote>
+<h2 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h2></p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2016/03/15/2016-03-15-linux-io模式/%20lejingw's blog%20Linux IO模式" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2016/05/23/2016-05-23-Docker-Usage/" title="Docker Usage"><i class="fa fa-angle-double-left"></i>&nbsp;이전 포스트: Docker Usage</a></span><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2016/03/15/2016-03-15-use-jmeter-1/" title="Use Jmeter#1">다음 포스트: Use Jmeter#1&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>

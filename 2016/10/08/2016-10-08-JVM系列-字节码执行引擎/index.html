@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>JVM系列-字节码执行引擎 · lejingw's blog</title><meta name="description" content="运行时栈帧结构            当 前程 线
+
++-------------------------------------+
+| +-----------|当前栈帧|------------+ |
+| | +----------------------------+  | |
+| | |  "><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>JVM系列-字节码执行引擎</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2016-10-08</span><span class="meta-item"><i class="fa fa-folder"></i><span>&nbsp;</span><a href="/categories/technology/" title="technology" class="a-tag">technology</a><span>&nbsp;</span></span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/jvm/" title="jvm" class="a-tag">jvm</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="运行时栈帧结构"><a href="#运行时栈帧结构" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h2><pre><code>            当 前程 线
+
++-------------------------------------+
+| +-----------|当前栈帧|------------+ |
+| | +----------------------------+  | |
+| | |         局部变量表         |  | |
+| | |     Local Variable Table   |  | |
+| | |                            |  | |
+| | +----------------------------+  | |
+| | +----------------------------+  | |
+| | |          操作数栈           |  | |
+| | |       Operand Stack        |  | |
+| | |                            |  | |
+| | +----------------------------+  | |
+| | +----------------------------+  | |
+| | |          动态连接          |  | |
+| | |       Dynamic Linking      |  | |
+| | |                            |  | |
+| | +----------------------------+  | |
+| | +----------------------------+  | |
+| | |           返回地址         |  | |
+| | +----------------------------+  | |
+| |            ... ...              | |
+| |                                 | |
+| +---------------------------------+ +
+| +---------------------------------+ |
+| |             栈帧n               | |
+| |                                 | |
+| +---------------------------------+ |
+|              ... ...                |
+| +---------------------------------+ |
+| |             栈帧2               | |
+| |                                 | |
+| +---------------------------------+ |
+| +---------------------------------+ |
+| |                                 | |
+| |             栈帧1               | |
+| +---------------------------------+ |
++-------------------------------------+
+</code></pre>
+<h3 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h3><p>Java虚拟机的解释执行引擎称为”基于栈的执行引擎”,其中的栈就是指操作数栈</p>
+<h3 id="动态连接"><a href="#动态连接" class="headerlink" title="动态连接"></a>动态连接</h3><h2 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h2><h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>在编译时就确定下来的方法调用,称为解析,”编译器可知,运行期不可变”, 对应的字节码指令有:<br>| 指令 | 说明 |<br>|—-|–|<br>| invokestatic | 调用静态方法 |<br>| invokespecial | 调用实例构造器<init>方法,私有方法和父类方法 |<br>| invokevirtual | 调用所有的虚方法 |<br>| invokeinterface | 调用接口方法,会在运行时确定一个实现此接口的对象 |<br>| innnvokedynamic | 先在运行时<strong>动态解析</strong>出调用点限定符所引用的方法,然后在执行该方法|</p>
+<blockquote>
+<p>在此之前的4条调用指令,分派逻辑是固化在java虚拟机内部的,而invokedynamic指令的分派逻辑是由用户所设定的引导方法决定的</p>
+</blockquote>
+<blockquote>
+<p>非虚方法处理使用invokestatic和invokespecial调用的方法之外还有一种,就是被final修饰的方法. final虽然用invokevirtual指令来代用,但在java语言规范中明确说明了final方法是一种非虚方法.</p>
+</blockquote>
+<h3 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h3><ol>
+<li>静态分派<br> javac编译器会根据参数的静态类型决定使用哪个重载版本,所有依赖静态类型来定位方法执行版本的分派动作称为静态分派. 静态分派的典型应用是方法重载.</li>
+<li>动态分派<br> 重写</li>
+<li>单分派与多分派<br> 方法的接收者与方法的参数统称为方法的宗量.<br> 单分派是根据一个宗量对目标方法进行选择.<br> 多分派是根据多于一个宗量对目标方法进行选择.</li>
+<li>至1.7java语言还是属于一门静态多分派,动态单分派的语言</li>
+<li>虚拟机动态分派的实现<br> 实际实现采用了虚拟方法表vtable(vritual Method Table),<br> 对应的invokeinterface采用itable(Interface Method Table)<br> 来替换元数据查找以提高性能<blockquote>
+<p>上述方法表是”稳定优化”的手段,在条件允许的情况下,此外还有非稳定的”激进优化”,使用内联缓存(Inline Cache) 和 基于”类型继承关系分析”(Class Hierarchy Analysis, CHA)技术的守护内联(Guarded Inlining)</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="动态类型语言支持"><a href="#动态类型语言支持" class="headerlink" title="动态类型语言支持"></a>动态类型语言支持</h3><blockquote>
+<p>什么是动态类型语言? 类型检查的主题过程是在运行期而不是编译器.</p>
+</blockquote>
+<p>jdk1.7实现了JSR-292, 新加入了java.lang.invoke包, 提供了一种新的动态确定目标方法的机制,称为MethodHandle.</p>
+<ul>
+<li>Reflection是模拟java代码层次的方法调用, 而MethodHandle模拟字节码层次的方法调用</li>
+<li>Reflection中的java.lang.reflect.Method对象远比java.lang.invoke.MethodHandle对象所包含的信息多. 前者包含了方法的签名,描述符以及方法属性表中各种属性的java一端的全面映像,还包含执行权限等信息. 而MethodHandle只包含于执行该方法相关的信息, 是轻量级的, 而前者是重量级的.</li>
+<li>MethodHandle是对字节码的方法指令调用的模拟,理论上支持这方面的各种优化(如方法内联), 而反射则不行.</li>
+<li>Reflection站在java语言的角度看,只为java语言服务的. 而MethodHandle被设计成可服务于所有java虚拟机之上的语言.</li>
+</ul>
+<h2 id="基于栈的字节码解释执行引擎"><a href="#基于栈的字节码解释执行引擎" class="headerlink" title="基于栈的字节码解释执行引擎"></a>基于栈的字节码解释执行引擎</h2><p>基于栈的指令集机构,优点是ke’yi’zhi可移植,确定是执行速度相对慢一些, 由于指令数量和内存访问的原因. 出栈入栈本身产生了相当多的指令数量,栈实现在内存中.</p>
+<blockquote>
+<p>android平台的Dalvik VM是基于寄存器的虚拟机</p>
+</blockquote>
+</p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2016/10/08/2016-10-08-JVM系列-字节码执行引擎/%20lejingw's blog%20JVM系列-字节码执行引擎" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2016/10/09/2016-10-09-JVM%E7%B3%BB%E5%88%97-%E6%97%A9%E6%9C%9F-%E8%BF%90%E8%A1%8C%E6%9C%9F-%E4%BC%98%E5%8C%96/" title="JVM系列-早期(运行期)优化"><i class="fa fa-angle-double-left"></i>&nbsp;이전 포스트: JVM系列-早期(运行期)优化</a></span><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2016/10/05/2016-10-05-JVM%E7%B3%BB%E5%88%97-%E9%94%81%E4%BC%98%E5%8C%96/" title="JVM系列-锁优化">다음 포스트: JVM系列-锁优化&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>
