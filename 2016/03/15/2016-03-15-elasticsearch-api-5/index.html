@@ -1,180 +1,277 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>ElasticSearch API 5-结构化搜索 · lejingw's blog</title><meta name="description" content="结构化搜索构建测试数据1 创建索引
-curl -XDELETE -i &amp;#39;http://localhost:9200/my_store&amp;#39;
-curl -XPUT -i &amp;quot;http://127.0.0.1:9200/my_store&amp;quot; -d &amp;#39;
-&amp;#123;
- "><meta name="keywords" content=""><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div id="stage" class="container"><div class="row"><div id="side-bar" class="col-sm-3 col-xs-12 side-container invisible"><div class="vertical-text site-title"><h3 tabindex="-1" class="site-title-small"><a href="/" class="a-title">Typography</a></h3><h1 tabindex="-1" class="site-title-large"><a href="/" class="a-title">活版印字</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><div id="site-nav" class="site-title-links"><ul><li><a href="/">대문</a></li><li><a href="/archives">아카이브</a></li><li><a href="/categories">카테고리</a></li><li><a href="/tags">태그</a></li><li class="soc"><a href="https://lejingw.github.io/atom.xml" target="_blank" rel="noopener noreferrer"><i class="fa fa-rss">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div><div id="main-container" class="col-sm-9 col-xs-12 main-container invisible"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>ElasticSearch API 5-结构化搜索</a></p><p class="post-meta"><span class="date meta-item">Posted at&nbsp;2016-03-15</span><span class="meta-item"><i class="fa fa-folder"></i><span>&nbsp;</span><a href="/categories/technology/" title="technology" class="a-tag">technology</a><span>&nbsp;</span></span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a href="/tags/elasticsearch/" title="elasticsearch" class="a-tag">elasticsearch</a><span>&nbsp;</span></span></p><p class="post-abstract"><h1 id="结构化搜索"><a href="#结构化搜索" class="headerlink" title="结构化搜索"></a>结构化搜索</h1><h2 id="构建测试数据"><a href="#构建测试数据" class="headerlink" title="构建测试数据"></a>构建测试数据</h2><pre><code>1 创建索引
-curl -XDELETE -i &#39;http://localhost:9200/my_store&#39;
-curl -XPUT -i &quot;http://127.0.0.1:9200/my_store&quot; -d &#39;
-&#123;
-   &quot;mappings&quot;:&#123;
-     &quot;products&quot;:&#123;
-        &quot;properties&quot;:&#123;
-          &quot;productID&quot;:&#123;
-            &quot;type&quot;:&quot;string&quot;,
-            &quot;index&quot;:&quot;not_analyzed&quot;
-           &#125;
-        &#125;
-      &#125;
-    &#125;
-&#125;&#39;
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-2 批量添加数据
-curl -XPOST -i &#39;http://localhost:9200/my_store/products/_bulk&#39; -d &#39;
-&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;
-&#123; &quot;price&quot; : 10, &quot;productID&quot; : &quot;XHDK-A-1293-#fJ3&quot; &#125;
-&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;
-&#123; &quot;price&quot; : 20, &quot;productID&quot; : &quot;KDKE-B-9947-#kL5&quot; &#125;
-&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;
-&#123; &quot;price&quot; : 30, &quot;productID&quot; : &quot;JODL-X-1937-#pV7&quot; &#125;
-&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4 &#125;&#125;
-&#123; &quot;price&quot; : 30, &quot;productID&quot; : &quot;QQPX-R-3956-#aD8&quot; &#125;
-&#39;
+  
+  <title>ElasticSearch API 5-结构化搜索 | lejingw&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="结构化搜索构建测试数据123456789101112131415161718192021222324252627282930313233343536373839401 创建索引curl -XDELETE -i &#39;http:&#x2F;&#x2F;localhost:9200&#x2F;my_store&#39;curl -XPUT -i &quot;http:&#x2F;&#x2F;127">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch API 5-结构化搜索">
+<meta property="og:url" content="https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-5/index.html">
+<meta property="og:site_name" content="lejingw&#39;s blog">
+<meta property="og:description" content="结构化搜索构建测试数据123456789101112131415161718192021222324252627282930313233343536373839401 创建索引curl -XDELETE -i &#39;http:&#x2F;&#x2F;localhost:9200&#x2F;my_store&#39;curl -XPUT -i &quot;http:&#x2F;&#x2F;127">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-03-15T07:58:25.000Z">
+<meta property="article:modified_time" content="2020-10-09T05:56:46.610Z">
+<meta property="article:author" content="lejingw">
+<meta property="article:tag" content="elasticsearch">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="lejingw&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
 
-3 准确值查询
-curl -XGET -i &#39;http://localhost:9200/my_store/products/_search&#39; -d &#39;&#123;
-    &quot;query&quot;:&#123;
-        &quot;filtered&quot;:&#123;
-            &quot;filter&quot;:&#123;
-                &quot;term&quot;:&#123;
-                    &quot;productID&quot;:&quot;KDKE-B-9947-#kL5&quot;
-                &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;&#39;</code></pre>
-<h2 id="组合过滤"><a href="#组合过滤" class="headerlink" title="组合过滤"></a>组合过滤</h2><pre><code>curl -XGET -i &#39;http://localhost:9200/my_store/products/_search&#39; -d &#39;&#123;
-&quot;query&quot; : &#123;
-        &quot;filtered&quot; : &#123;
-            &quot;filter&quot; : &#123;
-                &quot;bool&quot;:&#123;
-                    &quot;should&quot;:[
-                        &#123;&quot;term&quot;:&#123;&quot;price&quot;:20&#125;&#125;,
-                        &#123;&quot;term&quot;:&#123;&quot;procudtID&quot;:&quot;XHDK-A-1293-#fJ3&quot;&#125;&#125;
-                    ],
-                    &quot;must_not&quot;:&#123;
-                        &quot;term&quot;:&#123;&quot;price&quot;:30&#125;
-                    &#125;
-                &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;&#39;</code></pre>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">lejingw&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://lejingw.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2016-03-15-elasticsearch-api-5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/15/2016-03-15-elasticsearch-api-5/" class="article-date">
+  <time datetime="2016-03-15T07:58:25.000Z" itemprop="datePublished">2016-03-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/technology/">technology</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ElasticSearch API 5-结构化搜索
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="结构化搜索"><a href="#结构化搜索" class="headerlink" title="结构化搜索"></a>结构化搜索</h1><h2 id="构建测试数据"><a href="#构建测试数据" class="headerlink" title="构建测试数据"></a>构建测试数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">1 创建索引</span><br><span class="line">curl -XDELETE -i &#39;http:&#x2F;&#x2F;localhost:9200&#x2F;my_store&#39;</span><br><span class="line">curl -XPUT -i &quot;http:&#x2F;&#x2F;127.0.0.1:9200&#x2F;my_store&quot; -d &#39;</span><br><span class="line">&#123;</span><br><span class="line">   &quot;mappings&quot;:&#123;</span><br><span class="line">     &quot;products&quot;:&#123;</span><br><span class="line">        &quot;properties&quot;:&#123;</span><br><span class="line">          &quot;productID&quot;:&#123;</span><br><span class="line">            &quot;type&quot;:&quot;string&quot;,</span><br><span class="line">            &quot;index&quot;:&quot;not_analyzed&quot;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#39;</span><br><span class="line"></span><br><span class="line">2 批量添加数据</span><br><span class="line">curl -XPOST -i &#39;http:&#x2F;&#x2F;localhost:9200&#x2F;my_store&#x2F;products&#x2F;_bulk&#39; -d &#39;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 1 &#125;&#125;</span><br><span class="line">&#123; &quot;price&quot; : 10, &quot;productID&quot; : &quot;XHDK-A-1293-#fJ3&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2 &#125;&#125;</span><br><span class="line">&#123; &quot;price&quot; : 20, &quot;productID&quot; : &quot;KDKE-B-9947-#kL5&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3 &#125;&#125;</span><br><span class="line">&#123; &quot;price&quot; : 30, &quot;productID&quot; : &quot;JODL-X-1937-#pV7&quot; &#125;</span><br><span class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4 &#125;&#125;</span><br><span class="line">&#123; &quot;price&quot; : 30, &quot;productID&quot; : &quot;QQPX-R-3956-#aD8&quot; &#125;</span><br><span class="line">&#39;</span><br><span class="line"></span><br><span class="line">3 准确值查询</span><br><span class="line">curl -XGET -i &#39;http:&#x2F;&#x2F;localhost:9200&#x2F;my_store&#x2F;products&#x2F;_search&#39; -d &#39;&#123;</span><br><span class="line">	&quot;query&quot;:&#123;</span><br><span class="line">		&quot;filtered&quot;:&#123;</span><br><span class="line">			&quot;filter&quot;:&#123;</span><br><span class="line">				&quot;term&quot;:&#123;</span><br><span class="line">					&quot;productID&quot;:&quot;KDKE-B-9947-#kL5&quot;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<h2 id="组合过滤"><a href="#组合过滤" class="headerlink" title="组合过滤"></a>组合过滤</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET -i &#39;http:&#x2F;&#x2F;localhost:9200&#x2F;my_store&#x2F;products&#x2F;_search&#39; -d &#39;&#123;</span><br><span class="line">&quot;query&quot; : &#123;</span><br><span class="line">        &quot;filtered&quot; : &#123;</span><br><span class="line">            &quot;filter&quot; : &#123;</span><br><span class="line">            	&quot;bool&quot;:&#123;</span><br><span class="line">            		&quot;should&quot;:[</span><br><span class="line">            			&#123;&quot;term&quot;:&#123;&quot;price&quot;:20&#125;&#125;,</span><br><span class="line">            			&#123;&quot;term&quot;:&#123;&quot;procudtID&quot;:&quot;XHDK-A-1293-#fJ3&quot;&#125;&#125;</span><br><span class="line">            		],</span><br><span class="line">            		&quot;must_not&quot;:&#123;</span><br><span class="line">            			&quot;term&quot;:&#123;&quot;price&quot;:30&#125;</span><br><span class="line">            		&#125;</span><br><span class="line">            	&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#39;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>SELECT product FROM   products<br>WHERE  (price = 20 OR productID = “XHDK-A-1293-#fJ3”)<br>  AND  (price != 30)</p>
 </blockquote>
-<h2 id="查询多个准确值"><a href="#查询多个准确值" class="headerlink" title="查询多个准确值"></a>查询多个准确值</h2><pre><code>&#123;
-    &quot;terms&quot;:&#123;
-        &quot;price&quot;:[20,30]
-    &#125;
-&#125;</code></pre>
+<h2 id="查询多个准确值"><a href="#查询多个准确值" class="headerlink" title="查询多个准确值"></a>查询多个准确值</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;terms&quot;:&#123;</span><br><span class="line">        &quot;price&quot;:[20,30]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>term 和 terms 是包含操作，而不是相等操作</p>
 </blockquote>
 <h2 id="完全匹配"><a href="#完全匹配" class="headerlink" title="完全匹配"></a>完全匹配</h2><p>假如你真的需要完全匹配这种行为，最好是通过添加另一个字段来实现。在这个字段中，你索引原字段包含值的个数。</p>
-<pre><code>&#123; &quot;tags&quot; : [&quot;search&quot;], &quot;tag_count&quot; : 1 &#125;
-&#123; &quot;tags&quot; : [&quot;search&quot;, &quot;open_source&quot;], &quot;tag_count&quot; : 2 &#125;
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123; &quot;tags&quot; : [&quot;search&quot;], &quot;tag_count&quot; : 1 &#125;</span><br><span class="line">&#123; &quot;tags&quot; : [&quot;search&quot;, &quot;open_source&quot;], &quot;tag_count&quot; : 2 &#125;</span><br><span class="line"></span><br><span class="line">GET &#x2F;my_index&#x2F;my_type&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot;: &#123;</span><br><span class="line">        &quot;filtered&quot; : &#123;</span><br><span class="line">            &quot;filter&quot; : &#123;</span><br><span class="line">                 &quot;bool&quot; : &#123;</span><br><span class="line">                    &quot;must&quot; : [</span><br><span class="line">                        &#123; &quot;term&quot; : &#123; &quot;tags&quot; : &quot;search&quot; &#125; &#125;,</span><br><span class="line">                        &#123; &quot;term&quot; : &#123; &quot;tag_count&quot; : 1 &#125; &#125;</span><br><span class="line">                    ]</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-GET /my_index/my_type/_search
-&#123;
-    &quot;query&quot;: &#123;
-        &quot;filtered&quot; : &#123;
-            &quot;filter&quot; : &#123;
-                 &quot;bool&quot; : &#123;
-                    &quot;must&quot; : [
-                        &#123; &quot;term&quot; : &#123; &quot;tags&quot; : &quot;search&quot; &#125; &#125;,
-                        &#123; &quot;term&quot; : &#123; &quot;tag_count&quot; : 1 &#125; &#125;
-                    ]
-                &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;</code></pre>
-<h2 id="范围"><a href="#范围" class="headerlink" title="范围"></a>范围</h2><pre><code>GET /my_store/products/_search
-&#123;
-    &quot;query&quot; : &#123;
-        &quot;filtered&quot; : &#123;
-            &quot;filter&quot; : &#123;
-                &quot;range&quot; : &#123;
-                    &quot;price&quot; : &#123;
-                        &quot;gte&quot; : 20,
-                        &quot;lt&quot;  : 40
-                    &#125;
-                &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;
-</code></pre>
-<h3 id="日期范围"><a href="#日期范围" class="headerlink" title="日期范围"></a>日期范围</h3><pre><code>&quot;range&quot; : &#123;
-    &quot;timestamp&quot; : &#123;
-        &quot;gt&quot; : &quot;2014-01-01 00:00:00&quot;,
-        &quot;lt&quot; : &quot;2014-01-07 00:00:00&quot;
-    &#125;
-&#125;
+<h2 id="范围"><a href="#范围" class="headerlink" title="范围"></a>范围</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;my_store&#x2F;products&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot; : &#123;</span><br><span class="line">        &quot;filtered&quot; : &#123;</span><br><span class="line">            &quot;filter&quot; : &#123;</span><br><span class="line">                &quot;range&quot; : &#123;</span><br><span class="line">                    &quot;price&quot; : &#123;</span><br><span class="line">                        &quot;gte&quot; : 20,</span><br><span class="line">                        &quot;lt&quot;  : 40</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-&quot;range&quot;:&#123;
-    &quot;timestamp&quot;:&#123;
-        &quot;gt&quot;:&quot;now-1h&quot;#最近一小时
-    &#125;
-&#125;
+<h3 id="日期范围"><a href="#日期范围" class="headerlink" title="日期范围"></a>日期范围</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&quot;range&quot; : &#123;</span><br><span class="line">    &quot;timestamp&quot; : &#123;</span><br><span class="line">        &quot;gt&quot; : &quot;2014-01-01 00:00:00&quot;,</span><br><span class="line">        &quot;lt&quot; : &quot;2014-01-07 00:00:00&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&quot;range&quot;:&#123;</span><br><span class="line">    &quot;timestamp&quot;:&#123;</span><br><span class="line">        &quot;gt&quot;:&quot;now-1h&quot;#最近一小时</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&quot;range&quot; : &#123;</span><br><span class="line">    &quot;timestamp&quot; : &#123;</span><br><span class="line">        &quot;gt&quot; : &quot;2014-01-01 00:00:00&quot;,</span><br><span class="line">        &quot;lt&quot; : &quot;2014-01-01 00:00:00||+1M&quot;#早于2014年1月1号加一个月</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-&quot;range&quot; : &#123;
-    &quot;timestamp&quot; : &#123;
-        &quot;gt&quot; : &quot;2014-01-01 00:00:00&quot;,
-        &quot;lt&quot; : &quot;2014-01-01 00:00:00||+1M&quot;#早于2014年1月1号加一个月
-    &#125;
-&#125;</code></pre>
 <blockquote>
 <p>只要在日期后加上双竖线||，就能使用日期数学表达式了</p>
 </blockquote>
-<h2 id="处理null值"><a href="#处理null值" class="headerlink" title="处理null值"></a>处理null值</h2><pre><code>GET /my_index/posts/_search
-&#123;
-    &quot;query&quot; : &#123;
-        &quot;filtered&quot; : &#123;
-            &quot;filter&quot; : &#123;
-                &quot;exists&quot; : &#123; &quot;field&quot; : &quot;tags&quot; &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;
+<h2 id="处理null值"><a href="#处理null值" class="headerlink" title="处理null值"></a>处理null值</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;my_index&#x2F;posts&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot; : &#123;</span><br><span class="line">        &quot;filtered&quot; : &#123;</span><br><span class="line">            &quot;filter&quot; : &#123;</span><br><span class="line">                &quot;exists&quot; : &#123; &quot;field&quot; : &quot;tags&quot; &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET &#x2F;my_index&#x2F;posts&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot; : &#123;</span><br><span class="line">        &quot;filtered&quot; : &#123;</span><br><span class="line">            &quot;filter&quot;: &#123;</span><br><span class="line">                &quot;missing&quot; : &#123; &quot;field&quot; : &quot;tags&quot; &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-GET /my_index/posts/_search
-&#123;
-    &quot;query&quot; : &#123;
-        &quot;filtered&quot; : &#123;
-            &quot;filter&quot;: &#123;
-                &quot;missing&quot; : &#123; &quot;field&quot; : &quot;tags&quot; &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;</code></pre>
-<h3 id="对象的exists-missing"><a href="#对象的exists-missing" class="headerlink" title="对象的exists/missing"></a>对象的exists/missing</h3><pre class="line-numbers language-bash"><code class="language-bash"><span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
-   <span class="token string">"name"</span> <span class="token keyword">:</span> <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
-      <span class="token string">"first"</span> <span class="token keyword">:</span> <span class="token string">"John"</span>,
-      <span class="token string">"last"</span> <span class="token keyword">:</span>  <span class="token string">"Smith"</span>
-   <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
-<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
-<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
-   <span class="token string">"name.first"</span> <span class="token keyword">:</span> <span class="token string">"John"</span>,
-   <span class="token string">"name.last"</span>  <span class="token keyword">:</span> <span class="token string">"Smith"</span>
-<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
+<h3 id="对象的exists-missing"><a href="#对象的exists-missing" class="headerlink" title="对象的exists/missing"></a>对象的exists/missing</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="string">&quot;name&quot;</span> : &#123;</span><br><span class="line">      <span class="string">&quot;first&quot;</span> : <span class="string">&quot;John&quot;</span>,</span><br><span class="line">      <span class="string">&quot;last&quot;</span> :  <span class="string">&quot;Smith&quot;</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">   <span class="string">&quot;name.first&quot;</span> : <span class="string">&quot;John&quot;</span>,</span><br><span class="line">   <span class="string">&quot;name.last&quot;</span>  : <span class="string">&quot;Smith&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;exists&quot;</span> : &#123; <span class="string">&quot;field&quot;</span> : <span class="string">&quot;name&quot;</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line">===&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;bool&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;should&quot;</span>: [</span><br><span class="line">            &#123; <span class="string">&quot;exists&quot;</span>: &#123; <span class="string">&quot;field&quot;</span>: &#123; <span class="string">&quot;name.first&quot;</span> &#125;&#125;&#125;,</span><br><span class="line">            &#123; <span class="string">&quot;exists&quot;</span>: &#123; <span class="string">&quot;field&quot;</span>: &#123; <span class="string">&quot;name.last&quot;</span>  &#125;&#125;&#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
-    <span class="token string">"exists"</span> <span class="token keyword">:</span> <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123; "field" : "name" &amp;#125;</span>
-<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
-<span class="token operator">==</span><span class="token operator">=</span><span class="token operator">></span>
-<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
-    <span class="token string">"bool"</span><span class="token keyword">:</span> <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;</span>
-        <span class="token string">"should"</span><span class="token keyword">:</span> <span class="token punctuation">[</span>
-            <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123; "exists": &amp;#123; "field": &amp;#123; "name.first" &amp;#125;&amp;#125;&amp;#125;,</span>
-            <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123; "exists": &amp;#123; "field": &amp;#123; "name.last"  &amp;#125;&amp;#125;&amp;#125;</span>
-        <span class="token punctuation">]</span>
-    <span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span>
-<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="过滤顺序"><a href="#过滤顺序" class="headerlink" title="过滤顺序"></a>过滤顺序</h2><p>bool 条件中过滤器的顺序对性能有很大的影响</p>
 <ul>
 <li>更详细的过滤条件应该被放置在其他过滤器之前，以便在更早的排除更多的文档</li>
 <li>缓存的过滤器非常快，所以它们需要被放在不能缓存的过滤器之前</li>
 </ul>
-</p></div><div class="share"><span>공유하기</span>&nbsp;<span class="soc"><a href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank" class="fa fa-bookmark"></a></span><span class="soc"><a href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));" class="fa fa-weibo"></a></span><span class="soc"><a target="_blank" rel="noopener" href="http://twitter.com/home?status=https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-5/%20lejingw's blog%20ElasticSearch API 5-结构化搜索" class="fa fa-twitter"></a></span></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2016/03/15/2016-03-15-use-jmeter-1/" title="Use Jmeter#1"><i class="fa fa-angle-double-left"></i>&nbsp;이전 포스트: Use Jmeter#1</a></span><span>&nbsp;</span><span class="next pagbuttons"><a role="navigation" href="/2016/03/15/2016-03-15-elasticsearch-api-4/" title="ElasticSearch API 4-索引管理">다음 포스트: ElasticSearch API 4-索引管理&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2020&nbsp;<a target="_blank" href="https://lejingw.github.io" rel="noopener noreferrer">lejingw</a></p><p>Theme&nbsp;<a target="_blank" href="https://github.com/SumiMakito/hexo-theme-typography" rel="noopener noreferrer">Typography</a>&nbsp;by&nbsp;<a target="_blank" href="https://www.keep.moe" rel="noopener noreferrer">Makito</a></p><p>Proudly published with&nbsp;<a target="_blank" href="https://hexo.io" rel="noopener noreferrer">Hexo</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script></body></html>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://lejingw.github.io/2016/03/15/2016-03-15-elasticsearch-api-5/" data-id="ckg1wa02l0006dv7ah6kq0dk6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/" rel="tag">elasticsearch</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/15/2016-03-15-use-jmeter-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Use Jmeter#1
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/15/2016-03-15-elasticsearch-api-4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ElasticSearch API 4-索引管理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/technology/">technology</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrency/" rel="tag">concurrency</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/" rel="tag">elasticsearch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/io/" rel="tag">io</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/" rel="tag">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ssh/" rel="tag">ssh</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/concurrency/" style="font-size: 16.67px;">concurrency</a> <a href="/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 20px;">elasticsearch</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jmeter/" style="font-size: 10px;">jmeter</a> <a href="/tags/jvm/" style="font-size: 20px;">jvm</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/scala/" style="font-size: 10px;">scala</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/08/04/2017-08-04-SSH%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/">SSH端口转发</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/24/2017-02-24-Java%E9%AB%98%E5%B9%B6%E5%8F%91-3%E9%94%81%E4%BC%98%E5%8C%96/">Java高并发-3锁优化</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/24/2017-02-24-docker-zookeeper/">docker-zookeeper</a>
+          </li>
+        
+          <li>
+            <a href="/2017/02/24/2017-02-24-Scala%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">Scala基本语法</a>
+          </li>
+        
+          <li>
+            <a href="/2017/01/04/2017-01-04-Java%E9%AB%98%E5%B9%B6%E5%8F%91-2JDK%E5%AF%B9%E5%B9%B6%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%94%AF%E6%8C%81/">Java高并发-2JDK对并行程序的支持</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 lejingw<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
